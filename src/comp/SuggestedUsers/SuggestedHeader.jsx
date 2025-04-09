@@ -10,9 +10,9 @@ const SuggestedHeader = () => {
                 <AvatarImage src={"/profilepic.png"}/>
             </AvatarRoot>
 
-            <Text fontSize={12} fontWeight={"bold"}>
+            <Link as={RouterLink} to={"/:username'"} fontSize={12} fontWeight={"bold"}>
                 francis.uko10
-            </Text>
+            </Link>
         </Flex>
         <Link as={RouterLink} to={"/auth"} fontSize={14} fontWeight={"medium"} color={"blue.400"} cursor="pointer">
             Log out
