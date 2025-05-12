@@ -5,13 +5,12 @@ import { CreatePostLogo, InstagramLogo, InstagramMobileLogo, NotificationsLogo, 
 import { Tooltip } from "../../components/ui/tooltip";
 import { BiLogOut } from "react-icons/bi";
 import useLogout from "../../hooks/useLogout";
-
-
-
+import useAuthStore from "../../store/authStore";
 
 
 
 const Sidebar = () => {
+  const authUser = useAuthStore((state) => state.user);
   const sidebarItems = [
     {
       icon: <AiFillHome size={25} />,
@@ -31,13 +30,14 @@ const Sidebar = () => {
       text: "Create",
     },
     {
-      icon: 
-      <AvatarRoot size={"sm"}>
-        <AvatarFallback name="Francis Uko"/>
-        <AvatarImage src="/profilepic.png"/>
-      </AvatarRoot>,
+      icon: authUser && (
+        <AvatarRoot size={"sm"}>
+          <AvatarFallback name={authUser.fullName || "User"} />
+          {authUser.profilePicURL && <AvatarImage src={authUser.profilePicURL} />}
+        </AvatarRoot>
+      ),
       text: "Profile",
-      link: "/francis.uko10",
+      link: authUser ? `/${authUser.username}` : "/",
     },
   ];
 

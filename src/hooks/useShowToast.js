@@ -1,15 +1,17 @@
+import { useCallback } from "react"
 import { toaster } from "../components/ui/toaster"
 
 const useShowToast = () => {
-    const showToast = (title, description, status) => {
-        toaster.create({
-            title: title,
-            description: description,
-            status: status,
-            duration: 3000,
-            isClosable: true
-        })
-    }
+  const showToast = useCallback((title, description, status) => {
+    toaster.create({
+      title,
+      description,
+      status,
+      duration: 3000,
+      isClosable: true,
+    })
+  }, [])
+
   return showToast
 }
 
