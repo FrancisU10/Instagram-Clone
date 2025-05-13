@@ -3,13 +3,15 @@ import { useState } from "react"
 import useUserProfileStore from "../../store/userProfileStore"
 import useAuthStore from "../../store/authStore"
 import EditProfile from "./EditProfile"
+import useFollowUser from "../../hooks/useFollowUser"
 
 const ProfileHeader = () => {
     const {userProfile} = useUserProfileStore()
     const authUser = useAuthStore(state => state.user)
-    const visitingOwnProfileAndAuth = authUser && authUser.username === userProfile.username
-    const visitingAnotherProfileAndAuth = authUser && authUser.username !== userProfile.username
+    const {isFollowing, isUpdating, handleFollowUser} = useFollowUser(userProfile?.uid)
     const [isOpen, setIsOpen] = useState(false);
+    const visitingOwnProfileAndAuth = authUser?.username && userProfile?.username && authUser.username === userProfile.username;
+    const visitingAnotherProfileAndAuth = authUser?.username && userProfile?.username && authUser.username !== userProfile.username;
 
   return (
     <Flex gap={{base:4, sm:10}} py={10} direction={{base:"column", sm:"row"}}>
@@ -32,8 +34,8 @@ const ProfileHeader = () => {
 
                 {visitingAnotherProfileAndAuth && (
                     <Flex gap={4} alignItems={"center"} justifyContent={"center"}>
-                    <Button bg={"blue.500"} color={"white"} _hover={{bg: "blue.600"}} size={{base: "xs", md: "sm"}}>
-                        Follow
+                    <Button bg={"blue.500"} color={"white"} _hover={{bg: "blue.600"}} size={{base: "xs", md: "sm"}} onClick={handleFollowUser} loading={isUpdating}>
+                       {isFollowing ? "Unfollow" : "Follow"}
                     </Button>
                 </Flex>)}
                 
