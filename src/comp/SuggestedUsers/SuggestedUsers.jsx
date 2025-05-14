@@ -1,12 +1,16 @@
 import { Box, Flex, Text, VStack } from "@chakra-ui/react"
 import SuggestedHeader from "./SuggestedHeader"
 import SuggestedUser from "./SuggestedUser"
+import useGetSuggestedUsers from "../../hooks/useGetSuggestedUsers"
 
 const SuggestedUsers = () => {
+  const {isLoading, suggestedUsers} = useGetSuggestedUsers()
+  if (isLoading) return null
   return (
     <VStack py={8} px={6} gap={4}>
         <SuggestedHeader />
-        <Flex alignItems={"center"} justify={"space-between"} w={"full"}>
+        {suggestedUsers.length !== 0 && (
+          <Flex alignItems={"center"} justify={"space-between"} w={"full"}>
             <Text fontSize={12} fontWeight={"bold"} color={"gray.500"}>
                 Suggested for you
             </Text>
@@ -15,10 +19,11 @@ const SuggestedUsers = () => {
                 See all
             </Text>
         </Flex>
+        )}
         
-        <SuggestedUser name= "Dan Abrahmov" followers= {1392} avatar="https://bit.ly/dan-abramov"/>
-        <SuggestedUser name= "Ryan Florence" followers= {1392} avatar="https://bit.ly/ryan-florence"/>
-        <SuggestedUser name= "Christian Nwamba" followers= {1392} avatar="https://bit.ly/code-beast"/>
+        {suggestedUsers.map(user=> (
+          <SuggestedUser user={user} key={user.id}/>
+        ))}
 
         <Box fontSize={12} color={"gray.500"} mt={5} alignSelf={"start"}>
              © 2025 Built by Francis
