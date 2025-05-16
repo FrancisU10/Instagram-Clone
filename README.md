@@ -1,8 +1,23 @@
-# React + Vite
+# InstaClone
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**InstaClone** is a full-featured Instagram clone built using React, Firebase, and Chakra UI. Users can sign up, create posts, follow others, like and comment on content, and customize their profiles. The goal was to replicate Instagram’s core features in a clean, responsive UI.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- Email/password authentication
+- Post creation with image and caption
+- Like and comment functionality
+- Follow/unfollow users
+- View user profiles
+- Edit profile info (username, bio, profile pic)
+- Modal views for followers and following
+- Responsive layout
+- Search for users
+
+## Tech Stack
+
+- **React** (Vite)
+- **Chakra UI** for styling
+- **Firebase**: Auth, Firestore, and Storage
+- **Zustand** for global state
+- **React Router DOM** for routing
