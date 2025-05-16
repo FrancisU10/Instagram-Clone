@@ -5,30 +5,39 @@ import { useAuthState } from "react-firebase-hooks/auth"
 import { auth } from "../../firebase/firebase"
 import Navbar from "../../comp/Navbar/Navbar"
 
-const PageLayout = ({children}) => {
-  const {pathname} = useLocation()
-  const [user, loading, ] = useAuthState(auth)
-  const canRenderSidebar = pathname !== "/auth" && user
-  const canRenderNavbar = !user && !loading && pathname !== "/auth"
-  const checkUserIsAuth = !user && loading
-  if(checkUserIsAuth) return <PageLayoutSpinner />;
-  return (
-    <Flex flexDir={canRenderNavbar ? "column" : "row"}>
-        {canRenderSidebar ? (<Box w={{base: "70px" ,md: "240px"}} > <Sidebar/> </Box>) : null}
-        {canRenderNavbar ? <Navbar /> : null}
-        <Box flex={1} w={{base: "calc(100% - 70px", md:"calc(100% - 240px"}} mx={"auto"}> 
-            {children}
-        </Box>
-    </Flex>
-  )
-}
+const PageLayout = ({ children }) => {
+  const { pathname } = useLocation();
+  const [user, loading] = useAuthState(auth);
 
-export default PageLayout
+  const canRenderSidebar = pathname !== "/auth" && user;
+  const canRenderNavbar = !user && !loading && pathname !== "/auth";
+  const checkUserIsAuth = !user && loading;
+
+  if (checkUserIsAuth) return <PageLayoutSpinner />;
+
+  return (
+    <Flex flexDir={canRenderNavbar ? "column" : "row"} minH="100vh">
+      {canRenderSidebar && (
+        <Box w={{ base: "70px", md: "240px" }}>
+          <Sidebar />
+        </Box>
+      )}
+
+      {canRenderNavbar && <Navbar />}
+
+      <Box flex={1} px={{ base: 4, md: 8 }} py={4}>
+        {children}
+      </Box>
+    </Flex>
+  );
+};
+
+export default PageLayout;
 
 const PageLayoutSpinner = () => {
-	return (
-		<Flex flexDir='column' h='100vh' alignItems='center' justifyContent='center'>
-			<Spinner size='xl' />
-		</Flex>
-	);
+  return (
+    <Flex flexDir="column" h="100vh" alignItems="center" justifyContent="center">
+      <Spinner size="xl" />
+    </Flex>
+  );
 };

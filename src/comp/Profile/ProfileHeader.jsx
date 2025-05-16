@@ -35,16 +35,16 @@ const ProfileHeader = () => {
         direction={{ base: "column", sm: "row" }}
         alignItems={{ base: "center", sm: "flex-start" }}
         justifyContent="flex-start"
-        gap={{ base: 8, sm: 16 }}
-        py={4}
-        w="1050px"
-        px={10}
-        position="relative"
-        left="50%"
-        transform="translateX(-33.5%)"
+        wrap="wrap"
+        gap={{ base: 6, sm: 12 }}
+        py={6}
+        w="full"
+        maxW="1000px"
+        mx="auto"
+        px={{ base: 4, md: 6 }}
       >
         <AvatarRoot
-          boxSize={{ base: "140px", md: "150px" }}
+          boxSize={{ base: "120px", md: "140px" }}
           alignSelf={{ base: "center", sm: "flex-start" }}
         >
           <AvatarFallback name={userProfile.fullName} />
@@ -135,7 +135,7 @@ const ProfileHeader = () => {
       {isOpen && <EditProfile isOpen={isOpen} onClose={() => setIsOpen(false)} />}
 
       <FollowersModal
-        open ={isFollowersOpen}
+        open={isFollowersOpen}
         setOpen={() => setIsFollowersOpen(false)}
         userIds={userProfile.followers}
         type="Followers"
