@@ -3,7 +3,7 @@ import useAuthStore from "../store/authStore";
 import useShowToast from "./useShowToast";
 import { getDownloadURL, ref, uploadString } from "firebase/storage";
 import { firestore, storage } from "../firebase/firebase";
-import { doc, updateDoc } from "firebase/firestore";
+import { doc, updateDoc, collection, query, where, getDocs } from "firebase/firestore";
 import useUserProfileStore from "../store/userProfileStore";
 
 const useEditProfile = () => {
@@ -24,6 +24,23 @@ const useEditProfile = () => {
 
 		let URL = "";
 		try {
+			const cleanedUsername = (inputs.username || "").toLowerCase().replace(/\s/g, "");
+
+			if (!cleanedUsername) {
+				throw new Error("Username cannot be empty or contain spaces");
+			}
+
+			if (cleanedUsername !== authUser.username) {
+				const q = query(
+					collection(firestore, "users"),
+					where("username", "==", cleanedUsername)
+				);
+				const querySnapshot = await getDocs(q);
+				if (!querySnapshot.empty) {
+					throw new Error("Username is already taken");
+				}
+			}
+
 			if (selectedFile) {
 				await uploadString(storageRef, selectedFile, "data_url");
 				URL = await getDownloadURL(ref(storage, `profilePics/${authUser.uid}`));
@@ -32,7 +49,7 @@ const useEditProfile = () => {
 			const updatedUser = {
 				...authUser,
 				fullName: inputs.fullName || authUser.fullName,
-				username: inputs.username || authUser.username,
+				username: cleanedUsername,
 				bio: inputs.bio || authUser.bio,
 				profilePicURL: URL || authUser.profilePicURL,
 			};
@@ -44,6 +61,8 @@ const useEditProfile = () => {
 			showToast("Success", "Profile updated successfully", "success");
 		} catch (error) {
 			showToast("Error", error.message, "error");
+		} finally {
+			setIsUpdating(false);
 		}
 	};
 

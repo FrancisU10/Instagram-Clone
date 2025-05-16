@@ -5,58 +5,69 @@ import useShowToast from './useShowToast';
 import useAuthStore from '../store/authStore';
 
 const useSignupWithEmailAndPassword = () => {
-    const [
-        createUserWithEmailAndPassword,
-        ,
-        loading,
-        error,
-      ] = useCreateUserWithEmailAndPassword(auth);
-      const showToast = useShowToast()
-      const loginUser = useAuthStore(state => state.login)
-      
-    const signup = async (inputs) => {
-        if(!inputs.email || !inputs.password || !inputs.username || !inputs.fullName) {
-            showToast("Error", "Please fill all the fields", "error")
-            return
-        }
-        const usersRef = collection(firestore, "users");
+  const [
+    createUserWithEmailAndPassword,
+    ,
+    loading,
+    error,
+  ] = useCreateUserWithEmailAndPassword(auth);
 
-		const q = query(usersRef, where("username", "==", inputs.username));
-		const querySnapshot = await getDocs(q);
+  const showToast = useShowToast();
+  const loginUser = useAuthStore(state => state.login);
 
-		if (!querySnapshot.empty) {
-			showToast("Error", "Username already exists", "error");
-			return;
-		}
-
-        try {
-            const newUser = await createUserWithEmailAndPassword(inputs.email, inputs.password)
-            if (!newUser && error) {
-                showToast("Error", error.message , "error")
-                return
-            }
-            if (newUser) {
-                const userDoc = {
-                    uid: newUser.user.uid,
-					email: inputs.email,
-					username: inputs.username,
-					fullName: inputs.fullName,
-					bio: "",
-					profilePicURL: "",
-					followers: [],
-					following: [],
-					posts: [],
-					createdAt: Date.now(),
-                }
-                await setDoc(doc(firestore, "users", newUser.user.uid), userDoc)
-                localStorage.setItem("user-info", JSON.stringify(userDoc))
-                loginUser(userDoc)
-            }
-        } catch (error) {
-            showToast("Error", error.message, "error")
-        }
+  const signup = async (inputs) => {
+    if (!inputs.email || !inputs.password || !inputs.username || !inputs.fullName) {
+      showToast("Error", "Please fill all the fields", "error");
+      return;
     }
-  return {loading, error, signup}
-}
 
-export default useSignupWithEmailAndPassword
+    const cleanedUsername = inputs.username.toLowerCase().replace(/\s/g, "");
+
+    if (!cleanedUsername) {
+      showToast("Error", "Username cannot be empty or contain spaces", "error");
+      return;
+    }
+
+    const usersRef = collection(firestore, "users");
+    const q = query(usersRef, where("username", "==", cleanedUsername));
+    const querySnapshot = await getDocs(q);
+
+    if (!querySnapshot.empty) {
+      showToast("Error", "Username already exists", "error");
+      return;
+    }
+
+    try {
+      const newUser = await createUserWithEmailAndPassword(inputs.email, inputs.password);
+      if (!newUser && error) {
+        showToast("Error", error.message, "error");
+        return;
+      }
+
+      if (newUser) {
+        const userDoc = {
+          uid: newUser.user.uid,
+          email: inputs.email,
+          username: cleanedUsername,
+          fullName: inputs.fullName,
+          bio: "",
+          profilePicURL: "",
+          followers: [],
+          following: [],
+          posts: [],
+          createdAt: Date.now(),
+        };
+
+        await setDoc(doc(firestore, "users", newUser.user.uid), userDoc);
+        localStorage.setItem("user-info", JSON.stringify(userDoc));
+        loginUser(userDoc);
+      }
+    } catch (error) {
+      showToast("Error", error.message, "error");
+    }
+  };
+
+  return { loading, error, signup };
+};
+
+export default useSignupWithEmailAndPassword;

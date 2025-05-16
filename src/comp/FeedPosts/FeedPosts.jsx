@@ -24,13 +24,22 @@ const FeedPosts = () => {
 
        {!isLoading && posts.length > 0 && posts.map((post) => <FeedPost key={post.id} post={post} />)}
 			 {!isLoading && posts.length === 0 && (
-				<>
-					<Text fontSize={"md"} color={"red.400"}>
-						Dayuum. Looks like you don&apos;t have any friends.
-					</Text>
-					<Text color={"red.400"}>Stop coding and go make some!!</Text>
-				</>
-			)}
+      <Flex
+        direction="column"
+        align="center"
+        justify="center"
+        textAlign="center"
+        py={20}
+        w="full"
+      >
+          <Text fontSize="xl" fontWeight="bold" color="gray.200" mb={2}>
+            Your feed is feeling a little empty.
+          </Text>
+          <Text fontSize="md" color="gray.400">
+            Start following users to see their posts here.
+          </Text>
+      </Flex>
+    )}
     </Container>
   )
 }

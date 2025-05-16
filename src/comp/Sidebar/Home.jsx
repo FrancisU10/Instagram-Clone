@@ -9,7 +9,7 @@ const Home = () => {
 			content="Home"
 			showArrow
 			openDelay={500}
-			positioning={{ placement: "right-start" }}
+			positioning={{ placement: "left-start" }}
 		>
 			<Box
 				as={Link}

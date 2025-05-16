@@ -11,7 +11,7 @@ const ProfileLink = () => {
 			content="Profile"
 			showArrow
 			openDelay={500}
-			positioning={{ placement: "right-start" }}
+			positioning={{ placement: "left-start" }}
 		>
 			<Box
 				as={Link}

@@ -14,6 +14,7 @@ const usePostComment = () => {
 	const handlePostComment = async (postId, comment) => {
 		if (isCommenting) return;
 		if (!authUser) return showToast("Error", "You must be logged in to comment", "error");
+        if (!comment || comment.trim() === "") return showToast("Error", "Comment cannot be empty", "error")
 		setIsCommenting(true);
 		const newComment = {
 			comment,

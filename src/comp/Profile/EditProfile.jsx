@@ -11,7 +11,7 @@ import {
     Box,
     AvatarFallback
   } from "@chakra-ui/react";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { MdClose } from "react-icons/md"
 import usePreviewImg from "../../hooks/usePreviewImg";
 import useAuthStore from "../../store/authStore";
@@ -25,6 +25,13 @@ import useShowToast from "../../hooks/useShowToast";
         bio: ''
     })
     const authUser = useAuthStore((state) => state.user)
+    useEffect(() => {
+      setInputs({
+        fullName: authUser.fullName || "",
+        username: authUser.username || "",
+        bio: authUser.bio || "",
+      });
+      }, [authUser]);
     const fileRef = useRef(null)
     const {handleImageChange, selectedFile, setSelectedFile } = usePreviewImg()
     const {isUpdating, editProfile} = useEditProfile()
@@ -41,6 +48,7 @@ import useShowToast from "../../hooks/useShowToast";
     }
     return (
     <>
+
       <Dialog.Root open={isOpen} onOpenChange={(open) => !open && onClose()}>
         <Dialog.Backdrop />
         <Dialog.Positioner>
@@ -85,7 +93,10 @@ import useShowToast from "../../hooks/useShowToast";
                         <Text> Full Name </Text>
                         <Input placeholder="Full Name" value={inputs.fullName || authUser.fullName} onChange={(e) => setInputs({...inputs, fullName: e.target.value})}/>
                         <Text> Username </Text>
-                        <Input placeholder="Username" value={inputs.username || authUser.username} onChange={(e) => setInputs({...inputs, username: e.target.value})} />
+                        <Input placeholder="Username" value={inputs.username} onChange={(e) => setInputs({
+                          ...inputs,
+                            username: e.target.value.toLowerCase().replace(/\s/g, ""),
+                          })} />
                         <Text> Bio </Text>
                         <Input placeholder="Bio" value={inputs.bio || authUser.bio} onChange={(e) => setInputs({...inputs, bio: e.target.value})} />
                     </Stack>
