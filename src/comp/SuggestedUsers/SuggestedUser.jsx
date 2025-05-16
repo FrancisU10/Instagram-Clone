@@ -8,6 +8,7 @@ import {
 } from "@chakra-ui/react";
 import useFollowUser from "../../hooks/useFollowUser";
 import useAuthStore from "../../store/authStore";
+import { Link } from "react-router-dom";
 
 const SuggestedUser = ({ user, setUser }) => {
   const authUser = useAuthStore((state) => state.user);
@@ -19,25 +20,31 @@ const SuggestedUser = ({ user, setUser }) => {
   const onFollowUser = async () => {
     const nextIsFollowing = await handleFollowUser();
 
+     if (typeof setUser === "function") {
     setUser((prev) => ({
       ...prev,
       followers: nextIsFollowing
         ? [...prev.followers, authUser.uid]
         : prev.followers.filter((uid) => uid !== authUser.uid),
     }));
-  };
+  }
+};
 
   return (
     <Flex justifyContent="space-between" alignItems="center" w="full" py={2}>
       <Flex alignItems="center" gap={2}>
-        <AvatarRoot size="md">
-          <AvatarImage src={user.profilePicURL} />
-        </AvatarRoot>
+        <Link to = {`/${user.username}`}>
+          <AvatarRoot size="md">
+            <AvatarImage src={user.profilePicURL} />
+          </AvatarRoot>
+        </Link>
 
         <VStack alignItems="flex-start" spacing={0} minW={0}>
-          <Box fontSize={12} fontWeight="bold" isTruncated>
-            {user.fullName}
-          </Box>
+          <Link to = {`/${user.username}`}>
+            <Box fontSize={12} fontWeight="bold" isTruncated>
+              {user.fullName}
+            </Box>
+          </Link>
           <Box fontSize={11} color="gray.500" isTruncated>
             {user.followers?.length ?? 0} followers
           </Box>
